@@ -1,0 +1,42 @@
+{
+  "routes": [
+    {
+      "route": "/api/createpending",
+      "methods": [ "POST" ],
+      "rewrite": "/api/CreatePendingSubmission"
+    },
+    {
+      "route": "/api/rollback",
+      "methods": [ "POST" ],
+      "rewrite": "/api/RollbackSubmission"
+    },
+    {
+      "route": "/api/save",
+      "methods": [ "POST" ],
+      "rewrite": "/api/UploadVendorFile"
+    },
+    {
+      "route": "/api/complete",
+      "methods": [ "POST" ],
+      "rewrite": "/api/MarkComplete"
+    }
+  ],
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": [
+      "/api/*",
+      "/_framework/*",
+      "/_content/*",
+      "/*.css",
+      "/*.js",
+      "/*.wasm",
+      "/*.json",
+      "/*.ico",
+      "/*.png",
+      "/*.jpg",
+      "/*.jpeg",
+      "/*.gif",
+      "/*.svg"
+    ]
+  }
+}

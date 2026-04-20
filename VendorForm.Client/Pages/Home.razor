@@ -1,0 +1,692 @@
+﻿@page "/"
+@using System.ComponentModel.DataAnnotations
+@using VendorForm.Client.Models;
+@using VendorForm.Client.Services;
+@using Syncfusion.Blazor.Inputs;
+
+@inject SubmissionService SubmissionService;
+
+<PageTitle>LSU Foundation - Vendor Information Submission Form</PageTitle>
+
+<h1 class="">Vendor Information Submission Form</h1>
+
+<h2 class="mb-1">Vendor Information</h2>
+<hr style="border: 3px solid #fdd023;">
+
+<p class="mt-10 mb-5">Please enter all of the information below:</p>
+
+<div style="display:@(showConfirmation || showComplete ? "none" : "block")">
+<!--SUBMISSION FORM-->
+<SfDataForm @ref="@dataForm"
+            ID="VendorSubmissionForm"
+            Model="@vendorInfo"
+            ValidationDisplayMode="FormValidationDisplay.Inline"
+            ButtonsAlignment="FormButtonsAlignment.Center"
+            EditContext="@editContext">
+    <FormValidator>
+        <ValidationSummary />
+    </FormValidator>
+
+    <FormItems>
+        <FormItem Field="@nameof(vendorInfo.VendorName)">
+            <Template>
+                <label class="e-label-top">Vendor Name <span class="required">*</span></label>
+                <SfTextBox @bind-Value="@vendorInfo.VendorName" />
+            </Template>
+        </FormItem>
+
+        <FormItem Field="@nameof(vendorInfo.PayeeName)">
+            <Template>
+                <label class="e-label-top">Payee Name <span class="xtra-form-text">(If different from vendor name)</span></label>
+                <SfTextBox @bind-Value="@vendorInfo.PayeeName" />
+            </Template>
+        </FormItem>
+
+        <FormItem Field="@nameof(vendorInfo.Address)">
+            <Template>
+                <label class="e-label-top">Address <span class="required">*</span></label>
+                <SfTextBox @bind-Value="@vendorInfo.Address" />
+            </Template>
+        </FormItem>
+
+        <FormItem Field="@nameof(vendorInfo.Address2)">
+            <Template>
+                <label class="e-label-top">Address (Line 2)</label>
+                <SfTextBox @bind-Value="@vendorInfo.Address2" />
+            </Template>
+        </FormItem>
+
+        <FormItem Field="@nameof(vendorInfo.City)">
+            <Template>
+                <label class="e-label-top">City <span class="required">*</span></label>
+                <SfTextBox @bind-Value="@vendorInfo.City" />
+            </Template>
+        </FormItem>
+
+        <FormItem Field="@nameof(vendorInfo.State)">
+            <Template>
+                <label class="e-label-top">State <span class="required">*</span></label>
+                <!--DROPDOWN-->
+                <SfDropDownList TValue="string"
+                                TItem="string"
+                                Placeholder="Please Select"
+                                DataSource="@StateList"
+                                @bind-Value="@vendorInfo.State"></SfDropDownList>
+            </Template>
+        </FormItem>
+
+        <FormItem Field="@nameof(vendorInfo.Zipcode)">
+            <Template>
+                <label class="e-label-top">Zipcode <span class="required">*</span></label>
+                <SfTextBox @bind-Value="@vendorInfo.Zipcode" />
+            </Template>
+        </FormItem>
+
+        <FormItem Field="@nameof(vendorInfo.Email)">
+            <Template>
+                <label class="e-label-top">E-mail<span class="xtra-form-text"> (E-mail address will only be used for EFT notification purposes only) </span><span class="required">*</span></label>
+                <SfTextBox @bind-Value="@vendorInfo.Email" />
+            </Template>
+        </FormItem>
+
+        <FormItem Field="@nameof(vendorInfo.EntityType)">
+            <Template>
+                <label class="e-label-top">Please choose entity type <span class="required">*</span></label>
+                <!--Radio Buttons-->
+                <div>
+                    <SfRadioButton Label="Business"
+                                    Name="EntityType"
+                                    Value="Business"
+                                    CssClass="mr-6"
+                                    TChecked="string"
+                                    @bind-Checked="@vendorInfo.EntityType"
+                                    ValueChange="@HandleEntityChange"></SfRadioButton>
+                    <SfRadioButton Label="Individual"
+                                    Name="EntityType"
+                                    Value="Individual"
+                                    TChecked="string"
+                                    @bind-Checked="@vendorInfo.EntityType"
+                                    ValueChange="@HandleEntityChange"></SfRadioButton>
+
+                </div>
+
+                @if (@vendorInfo.EntityType.Equals("Business"))
+                {
+                    <div class="mt-4">
+                        <label class="e-label-top">Federal Tax ID Number <span class="xtra-form-text">(No Dashes)</span></label>
+                        <SfTextBox CssClass="mt-2" @bind-Value="@vendorInfo.FederalTaxId" />
+                    </div>
+                }
+                else
+                {
+                    <div>
+                        <p class="xtra-form-text mt-4">Please enter your Social Security Number or LSU ID Number</p>
+                        <div class="mt-4">
+                            <label class="e-label-top">Social Security Number <span class="xtra-form-text">(No Dashes)</span></label>
+                            <SfTextBox @bind-Value="@vendorInfo.SSN" />
+                        </div>
+
+                        <div class="mt-4">
+                            <label class="e-label-top">LSU ID Number <span class="xtra-form-text">(No Dashes)</span></label>
+                            <SfTextBox CssClass="mt-2" @bind-Value="@vendorInfo.LSUId" />
+                        </div>
+                    </div>
+                }
+            </Template>
+        </FormItem>
+
+        <FormItem Field="@nameof(vendorInfo.ContactName)">
+            <Template>
+                <label class="e-label-top">Contact Name <span class="required">*</span></label>
+                <SfTextBox @bind-Value="@vendorInfo.ContactName" />
+            </Template>
+        </FormItem>
+
+        <FormItem Field="@nameof(vendorInfo.ContactPhone)">
+            <Template>
+                <div class="flex flex-row">
+                    <div class="mr-10">
+                        <label class="e-label-top mr-10">Phone Number <span class="required">*</span></label>
+                        <SfMaskedTextBox Mask="###-###-####" @bind-Value="@vendorInfo.ContactPhone" />
+                    </div>
+                    <div>
+                        <label class="e-label-top">Ext.</label>
+                        <SfTextBox @bind-Value="@vendorInfo.Ext" />
+                    </div>
+                </div>
+            </Template>
+        </FormItem>
+
+        <FormItem Field="@nameof(vendorInfo.AccountType)">
+            <Template>
+                <label class="e-label-top">Account Type <span class="required">*</span></label>
+                <!--DROPDOWN-->
+                <SfDropDownList TValue="string"
+                                TItem="string"
+                                Placeholder="Please Select"
+                                DataSource="@AccountTypes"
+                                @bind-Value="@vendorInfo.AccountType"></SfDropDownList>
+            </Template>
+        </FormItem>
+
+        <FormItem Field="@nameof(vendorInfo.BankName)" ColumnSpan="2">
+            <Template>
+                <label class="e-label-top">Bank Name <span class="required">*</span></label>
+                <SfTextBox @bind-Value="@vendorInfo.BankName" />
+            </Template>
+        </FormItem>
+
+        <FormItem Field="@nameof(vendorInfo.RoutingNumber)" ColumnSpan="2">
+            <Template>
+                <label class="e-label-top">Routing Number <span class="required">*</span></label>
+                <SfTextBox @bind-Value="@vendorInfo.RoutingNumber" />
+            </Template>
+        </FormItem>
+
+        <FormItem Field="@nameof(vendorInfo.AccountNumber)" ColumnSpan="2">
+            <Template>
+                <label class="e-label-top">Account Number <span class="required">*</span></label>
+                <SfTextBox @bind-Value="@vendorInfo.AccountNumber" />
+            </Template>
+        </FormItem>
+    </FormItems>
+
+    <FormButtons></FormButtons>
+</SfDataForm>
+
+<div>
+    <label class="e-label-top">Please attach your W-9 to this form <span class="required">*</span></label>
+
+    <SfUploader @ref="uploader"
+                ID="UploadFiles"
+                AutoUpload="false"
+                AllowMultiple="false"
+                AllowedExtensions=".pdf,.jpg,.jpeg,.png"
+                MaxFileSize="10485760">
+            <UploaderAsyncSettings SaveUrl="/api/UploadVendorFile" />
+        <UploaderEvents FileSelected="OnFileSelected"
+                        BeforeUpload="BeforeUpload"
+                        Success="OnUploadSuccess"
+                        OnFailure="OnUploadFailure"
+                        OnRemove="OnFileRemove" />
+    </SfUploader>
+
+    @if (showFileError)
+    {
+        <div class="validation-message">
+            A PDF or image attachment is required.
+        </div>
+    }
+</div>
+
+<div class="mt-4 flex justify-center">
+        <SfButton Type="Button" OnClick="@SubmissionToConfirmation" CssClass="e-outline e-custom">Continue to Confirmation Page  >></SfButton>
+</div>
+
+</div>
+<div style="display:@(showConfirmation && !showComplete ? "block" : "none")">
+    <!--CONFIRMATION FORM-->
+    <div>
+        <div class="mb-4 flex flex-col gap-4">
+            <p><span class="font-bold">Vendor Name:</span> @vendorInfo.VendorName</p>
+            <p><span class="font-bold">Payee Name:</span> @vendorInfo.PayeeName</p>
+            <p><span class="font-bold">Address:</span> @vendorInfo.Address</p>
+            <p><span class="font-bold">Address (line 2):</span> @vendorInfo.Address2</p>
+            <p><span class="font-bold">City:</span> @vendorInfo.City</p>
+            <p><span class="font-bold">State:</span> @vendorInfo.State</p>
+            <p><span class="font-bold">Zipcode:</span> @vendorInfo.Zipcode</p>
+            <p><span class="font-bold">Email:</span> @vendorInfo.Email</p>
+            <p><span class="font-bold">Entity Type:</span> @vendorInfo.EntityType</p>
+            @if(vendorInfo.EntityType == "Business")
+            {
+                <p><span class="font-bold">Federal Tax Id:</span> @vendorInfo.FederalTaxId</p>
+            }else
+            {
+                <p><span class="font-bold">Social Security Number:</span> @vendorInfo.SSN</p>
+                <p><span class="font-bold">LSU ID Number:</span> @vendorInfo.LSUId</p>
+            }
+            <p><span class="font-bold">Contact Name:</span> @vendorInfo.ContactName</p>
+            <p><span class="font-bold">Contact Phone:</span> @vendorInfo.ContactPhone</p>
+            <p><span class="font-bold">Account Type:</span> @vendorInfo.AccountType</p>
+            <p><span class="font-bold">Bank Name:</span> @vendorInfo.BankName</p>
+            <p><span class="font-bold">Routing Number:</span> @vendorInfo.RoutingNumber</p>
+            <p><span class="font-bold">Account Number:</span> @vendorInfo.AccountNumber</p>
+        </div>
+    </div>
+
+    <div class="flex flex-row not-lg:justify-between">
+        <SfButton Type="Button" OnClick="@EditInformation" CssClass="e-outline e-custom">Edit Information</SfButton>
+        <SfButton Type="Button" OnClick="@ConfirmationSubmission" CssClass="e-outline e-custom">Confirm and Submit</SfButton>
+    </div>
+</div>
+
+
+<p class="mt-8 text-center lg:mx-[5%]">This web page is secured using an SSL Extended Validation certificate. 
+    All information submitted on this page is secured by the LSU Foundation and is only accessible via authorized personnel. 
+    If you experience any problems with using this form please send an email to accountspayable@lsufoundation.org.</p>
+
+<style>
+    h1, h3, h4, h5, h6 {
+        font-family: "Proxima Nova", sans-serif;
+        font-weight: 900;
+        color: #502e81;
+        margin-bottom: 1.25rem;
+        letter-spacing: .01em;
+    }
+
+    h1 {
+        font-size: clamp(2rem, 48px, 2.5rem);
+        color: #502e81;
+        margin: 30px 0;
+    }
+
+    h2 {
+        font-size: clamp(1.5rem, 32px, 2.5rem);
+        font-family: "Proxima Nova", sans-serif;
+        font-weight: 900;
+        color: #502e81;
+    }
+
+    p {
+        font-style: normal;
+        color: #231f20;
+        font-size: 1.125rem;
+        font-weight: 400;
+        line-height: 1.625rem;
+    }
+
+    .validation-errors {
+        margin-top: 1.5em;
+    }
+
+        .validation-errors .validation-message {
+            font-size: 1rem;
+        }
+
+    .xtra-form-text {
+        font-size: 1rem;
+        color: gray;
+        font-weight: 400;
+    }
+
+    .e-label-top {
+        margin-bottom: .5rem;
+        font-weight: 400 !important;
+    }
+
+    .e-custom.e-btn {
+        border: solid 2px #feca35 !important;
+        border-radius: 3px !important;
+        padding: 1rem;
+        font-size: 16px;
+        color: #5f3b97;
+        font-weight: 700;
+        transition: background-color 0.4s ease, border-color 0.4s ease;
+    }
+
+    .e-custom.e-btn:hover {
+        border: solid 2px #5f3b97 !important;
+        border-radius: 3px !important;
+    }
+
+    /* Wrapper for all custom radio styling */
+    .custom-radio .e-radio + label::before {
+        border-color: #502e81 !important; /* Outer circle border */
+    }
+
+    .e-radio-wrapper .e-radio:checked + label::after { /* csslint allow: adjoining-classes */
+        background-color: #502e81;
+        color: #502e81;
+    }
+
+    .e-radio-wrapper .e-radio:checked:focus + label::after,
+    .e-radio-wrapper .e-radio:checked + label:hover::after { /* csslint allow: adjoining-classes */
+        background-color: #502e81;
+    }
+
+    .e-radio-wrapper .e-radio:checked + ::before {
+        border-color: #502e81;
+        background-color: #fff;
+    }
+
+    .e-radio-wrapper .e-radio:checked:focus + ::before,
+    .e-radio-wrapper .e-radio:checked + label:hover::before { /* csslint allow: adjoining-classes */
+        border-color: #502e81;
+    }
+
+    .e-radio-wrapper .e-radio + label:hover::before {
+        border-color: #b1afaf;
+    }
+
+    /* When the radio is checked AND pressed/focused */
+    .e-radio-wrapper .e-radio:checked:focus + label::before {
+        border-color: #5f3b97 !important; /* Outer ring color */
+        box-shadow: 0 0 0 4px rgba(80, 46, 129, 0.35) !important; /* Optional glow */
+    }
+
+    .required {
+        color: #BA0000;
+        font-weight: 800;
+    }
+
+    *:focus {
+        outline: none !important;
+        border-color: #502e81 !important;
+        transition: box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+
+
+    .e-upload-actions {
+        display: none !important;
+    }
+
+</style>
+
+@code {
+    //Helpful Rendering Variables
+    private bool showConfirmation = false;
+    private bool showComplete = false;
+
+    //DataForm Variables
+    private SfDataForm dataForm;
+    private VendorInformation vendorInfo = new TestVendorModel();
+    private EditContext editContext = null!;
+    private ValidationMessageStore messageStore = null!;
+
+    //File Uploading Variables
+    private SfUploader? uploader;
+    private string? submissionId;
+    private string? uploadToken;
+    private bool IsFileSelected;
+    private bool showFileError;
+    private TaskCompletionSource<bool>? uploadCompletion;
+
+    //Handles initialization of objects when loading page
+    protected override void OnInitialized()
+    {
+        editContext = new EditContext(vendorInfo);
+        messageStore = new ValidationMessageStore(editContext);
+
+        editContext.OnValidationRequested += (_, __) => RunCustomValidation();
+        editContext.OnFieldChanged += EditContext_OnFieldChange;
+    }
+
+    //Validates form that is currently being used
+    private void ValidateForm()
+    {
+        messageStore.Clear();
+        showFileError = false;
+
+        ManualValidation();
+        RunCustomValidation();
+
+        if (!IsFileSelected)
+            showFileError = true;
+
+        editContext.NotifyValidationStateChanged();
+    }
+
+    //Handle moving from form to confirmaton page
+    private void SubmissionToConfirmation()
+    {
+        ValidateForm();
+
+        if (editContext.GetValidationMessages().Any() || showFileError) return;
+
+        showConfirmation = true;
+    }
+
+    //Handle the press for edit information when in the confirmation section
+    private void EditInformation()
+    {
+        showConfirmation = false;
+    }
+
+    //Handle the actual submission of the form
+    private async Task ConfirmationSubmission()
+    {
+        ValidateForm();
+
+        if (editContext.GetValidationMessages().Any() || showFileError)
+            return;
+
+        uploadCompletion = new TaskCompletionSource<bool>(
+            TaskCreationOptions.RunContinuationsAsynchronously);
+
+        try
+        {
+            var result = await SubmissionService.CreatePendingSubmission(vendorInfo);
+            submissionId = result.SubmissionId;
+            uploadToken = result.UploadToken;
+
+            await InvokeAsync(() => uploader!.UploadAsync());
+
+            var completed = await Task.WhenAny(
+                uploadCompletion.Task,
+                Task.Delay(TimeSpan.FromMinutes(2))
+            );
+
+            var succeeded = completed == uploadCompletion.Task &&
+                await uploadCompletion.Task;
+
+            if (!succeeded)
+            {
+                await SubmissionService.RollbackSubmission(submissionId);
+
+                //File has failed to be submitted show something to the screen. Mayve Toast notification.
+
+                editContext.NotifyValidationStateChanged();
+                return;
+            }
+
+
+            await SubmissionService.MarkCompleted(submissionId);
+            showConfirmation = false;
+            showComplete = true;
+        }
+        finally
+        {
+            uploadCompletion = null;
+        }
+    }
+
+    //Handle informaton before the file is uploaded
+    private void BeforeUpload(BeforeUploadEventArgs args)
+    {
+        args.CustomFormData = new List<object>
+    {
+        new { SubmissionId = submissionId ?? string.Empty }
+    };
+
+        args.CurrentRequest = new List<object>
+    {
+        new { Authorization = $"UploadToken {uploadToken ?? string.Empty}" }
+    };
+    }
+
+    //Handle file uploading successfully
+    private void OnUploadSuccess(SuccessEventArgs args)
+    {
+        uploadCompletion?.TrySetResult(true);
+    }
+
+    //Handle file upload failing
+    private void OnUploadFailure(FailureEventArgs args)
+    {
+        uploadCompletion?.TrySetResult(false);
+    }
+
+    //Handle when file is added to the file uploader
+    private void OnFileSelected(SelectedEventArgs args)
+    {
+        var MaxFileSize = 10 * 1024 * 1024;
+        var file = args.FilesData?.FirstOrDefault();
+
+        if(file == null)
+        {
+            IsFileSelected = false;
+            return;
+        }
+
+        if(file.Size > MaxFileSize)
+        {
+            IsFileSelected = false;
+            return;
+        }
+
+        IsFileSelected = args.FilesData?.Count > 0;
+        showFileError = false; // clear file error when user selects a file
+    }
+
+    //Handle when file is removed from file uploader
+    private void OnFileRemove(RemovingEventArgs args)
+    {
+        IsFileSelected = false;
+    }
+
+    //Manually validate all fields that have a requirement tag
+    private void ManualValidation()
+    {
+        var context = new ValidationContext(vendorInfo);
+        var results = new List<ValidationResult>();
+
+        Validator.TryValidateObject(
+            vendorInfo,
+            context,
+            results,
+            validateAllProperties: true
+        );
+
+        foreach (var result in results)
+        {
+            foreach (var fieldName in result.MemberNames)
+            {
+                messageStore.Add(
+                    editContext.Field(fieldName),
+                    result.ErrorMessage!
+                );
+
+            }
+        }
+    }
+
+    //Custom validation for business id entering
+    private void RunCustomValidation()
+    {
+        if(vendorInfo.EntityType == "Business")
+        {
+            if (string.IsNullOrEmpty(vendorInfo.FederalTaxId))
+            {
+                messageStore.Add(
+                    editContext.Field(nameof(vendorInfo.EntityType)),
+                    "Federal Tax ID is required for Business vendors."
+                );
+            }
+        }
+        else if (vendorInfo.EntityType == "Individual")
+        {
+            if (string.IsNullOrEmpty(vendorInfo.SSN) &&
+                string.IsNullOrEmpty(vendorInfo.LSUId))
+            {
+                messageStore.Add(
+                    editContext.Field(nameof(vendorInfo.EntityType)),
+                    "Social Security Number or LSU Id is required for Individual vendors."
+                );
+            }
+        }
+    }
+
+    //If EntityType changes then update the text boxes that are connected to it
+    private void HandleEntityChange(ChangeArgs<string> args)
+    {
+        string value = args.Value;
+
+        messageStore.Clear(editContext.Field(nameof(vendorInfo.EntityType)));
+
+        if(value == "Business")
+        {
+            vendorInfo.SSN = string.Empty;
+            vendorInfo.LSUId = string.Empty;
+        }else
+        {
+            vendorInfo.FederalTaxId = string.Empty;
+        }
+
+        editContext.NotifyValidationStateChanged();
+    }
+
+    //If any field is updated and has an error message; Then remove it
+    private void EditContext_OnFieldChange(object? sender, FieldChangedEventArgs args)
+    {
+        
+        if (args.FieldIdentifier.Model is not VendorInformation)
+                return;
+
+
+        messageStore.Clear(args.FieldIdentifier);
+        editContext.NotifyValidationStateChanged();
+    }
+
+    //Dropdown fields
+    string[] AccountTypes =
+    {
+        "Checking",
+        "Savings",
+        "Other"
+    };
+
+    string[] StateList =
+    {
+        "Alabama",
+        "Alaska",
+        "Arizona",
+        "Arkansas",
+        "California",
+        "Colorado",
+        "Connecticut",
+        "Delaware",
+        "District of Columbia",
+        "Florida",
+        "Georgia",
+        "Hawaii",
+        "Idaho",
+        "Illinois",
+        "Indiana",
+        "Iowa",
+        "Kansas",
+        "Kentucky",
+        "Louisiana",
+        "Maine",
+        "Maryland",
+        "Massachusetts",
+        "Michigan",
+        "Minnesota",
+        "Mississippi",
+        "Missouri",
+        "Montana",
+        "Nebraska",
+        "Nevada",
+        "New Hampshire",
+        "New Jersey",
+        "New Mexico",
+        "New York",
+        "North Carolina",
+        "North Dakota",
+        "Ohio",
+        "Oklahoma",
+        "Oregon",
+        "Pennsylvania",
+        "Rhode Island",
+        "South Carolina",
+        "South Dakota",
+        "Tennessee",
+        "Texas",
+        "Utah",
+        "Vermont",
+        "Virginia",
+        "Washington",
+        "West Virginia",
+        "Wisconsin",
+        "Wyoming"
+    };
+}

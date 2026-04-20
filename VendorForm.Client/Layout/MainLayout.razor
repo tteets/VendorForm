@@ -1,0 +1,20 @@
+﻿@inherits LayoutComponentBase
+
+<SfMediaQuery @bind-ActiveBreakpoint="activeBreakpoint"></SfMediaQuery>
+
+<div class="@ContainerClasses">
+    @Body
+</div>
+
+@code {
+    private string? activeBreakpoint { get; set; }
+
+    private string ContainerClasses =>
+        activeBreakpoint switch
+        {
+            "Large" => "mx-48 mb-10 mt-5",
+            "Medium" => "mx-15 mb-10 mt-5",
+            // Use a sensible default for the very first render when null/empty
+            _ => "mx-8 mb-10 mt-5"
+        };
+}
