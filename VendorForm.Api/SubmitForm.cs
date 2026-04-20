@@ -128,7 +128,8 @@ public class SubmitForm
         await blob.UploadAsync(stream, overwrite: true);
 
         entity.UploadToken = "";
-        entity.Status = "FileUploaded";
+        entity.Status = "UploadComplete";
+        entity.UploadedUtc = DateTimeOffset.Now;
         await _storage.VendorTable.UpdateEntityAsync(entity, entity.ETag, Azure.Data.Tables.TableUpdateMode.Merge);
 
         return new OkResult();
@@ -157,23 +158,6 @@ public class SubmitForm
         }
 
         return req.CreateResponse(HttpStatusCode.OK);
-    }
-
-    [Function("MarkComplete")]
-    public async Task<IActionResult> MarkComplete([HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest req)
-    {
-        SubmissionIdRequest? form = await req.ReadFromJsonAsync<SubmissionIdRequest>();
-
-        if (string.IsNullOrEmpty(form?.SubmissionId) || form.SubmissionId == null) return new BadRequestObjectResult("Missing SubmissionId");
-        var submissionId = form.SubmissionId;
-        if (string.IsNullOrEmpty(submissionId)) return new BadRequestObjectResult("Missing SubmissionId");
-
-        var entityResponse = await _storage.VendorTable.GetEntityAsync<VendorSubmissionEntry>("VendorSubmission", submissionId);
-        var entity = entityResponse.Value;
-
-        entity.Status = "UploadComplete";
-        await _storage.VendorTable.UpdateEntityAsync(entity, entity.ETag, Azure.Data.Tables.TableUpdateMode.Merge);
-        return new OkResult();
     }
 }
 

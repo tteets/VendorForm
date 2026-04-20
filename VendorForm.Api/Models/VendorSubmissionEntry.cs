@@ -18,6 +18,7 @@ public class VendorSubmissionEntry : ITableEntity
     public string Status { get; set; } = "PendingFile";
     public string UploadToken { get; set; } = default!;
     public DateTimeOffset CreatedUtc { get; set; }
+    public DateTimeOffset UploadedUtc { get; set; }
 
     public string VendorName { get; set; } = default!;
     public string PayeeName { get; set; }  = default!;

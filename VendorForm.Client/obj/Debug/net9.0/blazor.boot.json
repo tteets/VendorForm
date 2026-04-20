@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "VendorForm.Client",
   "resources": {
-    "hash": "sha256-srnlr3Xlyb3P0HSRwPKWuSl1kP4xtqafUkbD9TKnY/c=",
+    "hash": "sha256-BUvGSV1iTUlzm+HBXqyvZj/V+1/mCAyqeYsQLWoq8h8=",
     "fingerprinting": {
       "Microsoft.AspNetCore.Authorization.z6jo10m0rd.wasm": "Microsoft.AspNetCore.Authorization.wasm",
       "Microsoft.AspNetCore.Components.65wbz7t8mt.wasm": "Microsoft.AspNetCore.Components.wasm",
@@ -215,8 +215,8 @@
       "icudt_CJK.tjcz0u77k5.dat": "icudt_CJK.dat",
       "icudt_EFIGS.tptq2av103.dat": "icudt_EFIGS.dat",
       "icudt_no_CJK.lfu7j35m59.dat": "icudt_no_CJK.dat",
-      "VendorForm.Client.4bbyyqju9m.wasm": "VendorForm.Client.wasm",
-      "VendorForm.Client.thggm6itg4.pdb": "VendorForm.Client.pdb"
+      "VendorForm.Client.uv37mzh52g.wasm": "VendorForm.Client.wasm",
+      "VendorForm.Client.dtlxzen0ia.pdb": "VendorForm.Client.pdb"
     },
     "jsModuleNative": {
       "dotnet.native.6m0hb3g78a.js": "sha256-oksVqHEW5dic8ULICrYkuUVNascZfAw7ZPMG45TR/ak="
@@ -440,10 +440,10 @@
       "WindowsBase.g3ep9asl8e.wasm": "sha256-ZNubnH6lgybyHtAdlMT40aDBYT2V7npJIDu1AwBtujs=",
       "mscorlib.l7xs6zruqy.wasm": "sha256-3waJ44t0BBPDuFSBnvKXk4ReWykH4S/GJoncIfrAlvg=",
       "netstandard.97to7qusgy.wasm": "sha256-K2fLR0yH1WiUkzlu09Y2p2sm9BhyhGsoYJBopqdIuV4=",
-      "VendorForm.Client.4bbyyqju9m.wasm": "sha256-QNhgVmTkLl+GcxqY7Dnd+XvSTRsRLEHc28qGHhjobMc="
+      "VendorForm.Client.uv37mzh52g.wasm": "sha256-ll5pezm/yjvfmqBbwcCxiN5wMx/mtfDlQXkxveAl9LA="
     },
     "pdb": {
-      "VendorForm.Client.thggm6itg4.pdb": "sha256-fzoUDMnKVTOSXi3iz1BA1b4kkrcy2JpwFIAWbVB0Tk8="
+      "VendorForm.Client.dtlxzen0ia.pdb": "sha256-T6iN4sX+5a71KoldLur2DBBeefec1QoTPnR3B++BeWw="
     }
   },
   "cacheBootResources": true,

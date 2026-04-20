@@ -11,12 +11,12 @@
 <h1 class="">Vendor Information Submission Form</h1>
 
 <h2 class="mb-1">Vendor Information</h2>
-<hr style="border: 3px solid #fdd023;">
-
-<p class="mt-10 mb-5">Please enter all of the information below:</p>
+<hr />
 
 <div style="display:@(showConfirmation || showComplete ? "none" : "block")">
 <!--SUBMISSION FORM-->
+<p class="mt-10 mb-5">Please enter all of the information below:</p>
+
 <SfDataForm @ref="@dataForm"
             ID="VendorSubmissionForm"
             Model="@vendorInfo"
@@ -226,46 +226,56 @@
 </div>
 <div style="display:@(showConfirmation && !showComplete ? "block" : "none")">
     <!--CONFIRMATION FORM-->
-    <div>
-        <div class="mb-4 flex flex-col gap-4">
-            <p><span class="font-bold">Vendor Name:</span> @vendorInfo.VendorName</p>
-            <p><span class="font-bold">Payee Name:</span> @vendorInfo.PayeeName</p>
-            <p><span class="font-bold">Address:</span> @vendorInfo.Address</p>
-            <p><span class="font-bold">Address (line 2):</span> @vendorInfo.Address2</p>
-            <p><span class="font-bold">City:</span> @vendorInfo.City</p>
-            <p><span class="font-bold">State:</span> @vendorInfo.State</p>
-            <p><span class="font-bold">Zipcode:</span> @vendorInfo.Zipcode</p>
-            <p><span class="font-bold">Email:</span> @vendorInfo.Email</p>
-            <p><span class="font-bold">Entity Type:</span> @vendorInfo.EntityType</p>
-            @if(vendorInfo.EntityType == "Business")
-            {
-                <p><span class="font-bold">Federal Tax Id:</span> @vendorInfo.FederalTaxId</p>
-            }else
-            {
-                <p><span class="font-bold">Social Security Number:</span> @vendorInfo.SSN</p>
-                <p><span class="font-bold">LSU ID Number:</span> @vendorInfo.LSUId</p>
-            }
-            <p><span class="font-bold">Contact Name:</span> @vendorInfo.ContactName</p>
-            <p><span class="font-bold">Contact Phone:</span> @vendorInfo.ContactPhone</p>
-            <p><span class="font-bold">Account Type:</span> @vendorInfo.AccountType</p>
-            <p><span class="font-bold">Bank Name:</span> @vendorInfo.BankName</p>
-            <p><span class="font-bold">Routing Number:</span> @vendorInfo.RoutingNumber</p>
-            <p><span class="font-bold">Account Number:</span> @vendorInfo.AccountNumber</p>
-        </div>
+    <div class="my-4 flex flex-col gap-4">
+        <p><span class="font-bold">Vendor Name:</span> @vendorInfo.VendorName</p>
+        <p><span class="font-bold">Payee Name:</span> @vendorInfo.PayeeName</p>
+        <p><span class="font-bold">Address:</span> @vendorInfo.Address</p>
+        <p><span class="font-bold">Address (line 2):</span> @vendorInfo.Address2</p>
+        <p><span class="font-bold">City:</span> @vendorInfo.City</p>
+        <p><span class="font-bold">State:</span> @vendorInfo.State</p>
+        <p><span class="font-bold">Zipcode:</span> @vendorInfo.Zipcode</p>
+        <p><span class="font-bold">Email:</span> @vendorInfo.Email</p>
+        <p><span class="font-bold">Entity Type:</span> @vendorInfo.EntityType</p>
+        @if (vendorInfo.EntityType == "Business")
+        {
+            <p><span class="font-bold">Federal Tax Id:</span> @vendorInfo.FederalTaxId</p>
+        }
+        else
+        {
+            <p><span class="font-bold">Social Security Number:</span> @vendorInfo.SSN</p>
+            <p><span class="font-bold">LSU ID Number:</span> @vendorInfo.LSUId</p>
+        }
+        <p><span class="font-bold">Contact Name:</span> @vendorInfo.ContactName</p>
+        <p><span class="font-bold">Contact Phone:</span> @vendorInfo.ContactPhone</p>
+        <p><span class="font-bold">Account Type:</span> @vendorInfo.AccountType</p>
+        <p><span class="font-bold">Bank Name:</span> @vendorInfo.BankName</p>
+        <p><span class="font-bold">Routing Number:</span> @vendorInfo.RoutingNumber</p>
+        <p><span class="font-bold">Account Number:</span> @vendorInfo.AccountNumber</p>
     </div>
 
-    <div class="flex flex-row not-lg:justify-between">
-        <SfButton Type="Button" OnClick="@EditInformation" CssClass="e-outline e-custom">Edit Information</SfButton>
+    <div class="flex flex-row">
+        <SfButton Type="Button" OnClick="@EditInformation" CssClass="e-outline e-custom mr-5">Edit Information</SfButton>
         <SfButton Type="Button" OnClick="@ConfirmationSubmission" CssClass="e-outline e-custom">Confirm and Submit</SfButton>
     </div>
 </div>
+<div style="display:@(showComplete ? "block" : "none")">
+    <div class="mt-10">
+        <h3>Your form has been submitted!</h3>
+        <p>Your form has been submitted. We will reach out if there is any information that we might need.</p>
+    </div>
+    
+</div>
 
-
+<hr class="mt-10"/>
 <p class="mt-8 text-center lg:mx-[5%]">This web page is secured using an SSL Extended Validation certificate. 
     All information submitted on this page is secured by the LSU Foundation and is only accessible via authorized personnel. 
     If you experience any problems with using this form please send an email to accountspayable@lsufoundation.org.</p>
 
 <style>
+    hr {
+        border: 3px solid #fdd023;
+    }
+
     h1, h3, h4, h5, h6 {
         font-family: "Proxima Nova", sans-serif;
         font-weight: 900;
@@ -276,7 +286,6 @@
 
     h1 {
         font-size: clamp(2rem, 48px, 2.5rem);
-        color: #502e81;
         margin: 30px 0;
     }
 
@@ -285,6 +294,10 @@
         font-family: "Proxima Nova", sans-serif;
         font-weight: 900;
         color: #502e81;
+    }
+
+    h3 {
+        font-size: clamp(1rem, 32px, 2rem);
     }
 
     p {
@@ -386,6 +399,7 @@
     //Helpful Rendering Variables
     private bool showConfirmation = false;
     private bool showComplete = false;
+    private bool isSubmitting = false;
 
     //DataForm Variables
     private SfDataForm dataForm;
@@ -445,6 +459,10 @@
     //Handle the actual submission of the form
     private async Task ConfirmationSubmission()
     {
+        if(isSubmitting) return;
+
+        isSubmitting = true;
+
         ValidateForm();
 
         if (editContext.GetValidationMessages().Any() || showFileError)
@@ -479,8 +497,6 @@
                 return;
             }
 
-
-            await SubmissionService.MarkCompleted(submissionId);
             showConfirmation = false;
             showComplete = true;
         }
