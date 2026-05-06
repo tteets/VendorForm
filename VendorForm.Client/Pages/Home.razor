@@ -204,7 +204,7 @@
                 AllowedExtensions=".pdf,.jpg,.jpeg,.png"
                 MaxFileSize="10485760">
             <UploaderAsyncSettings SaveUrl="/api/UploadVendorFile" />
-        <UploaderEvents FileSelected="OnFileSelected"
+            <UploaderEvents FileSelected="OnFileSelected"
                         BeforeUpload="BeforeUpload"
                         Success="OnUploadSuccess"
                         OnFailure="OnUploadFailure"
@@ -219,7 +219,7 @@
     }
 </div>
 
-<div class="mt-4 flex justify-center">
+<div class="my-10 flex justify-center">
         <SfButton Type="Button" OnClick="@SubmissionToConfirmation" CssClass="e-outline e-custom">Continue to Confirmation Page  >></SfButton>
 </div>
 
@@ -253,20 +253,20 @@
         <p><span class="font-bold">Account Number:</span> @vendorInfo.AccountNumber</p>
     </div>
 
-    <div class="flex flex-row">
+    <div class="my-10 flex flex-row">
         <SfButton Type="Button" OnClick="@EditInformation" CssClass="e-outline e-custom mr-5">Edit Information</SfButton>
-        <SfButton Type="Button" OnClick="@ConfirmationSubmission" CssClass="e-outline e-custom">Confirm and Submit</SfButton>
+        <SfButton Type="Button" OnClick="@ConfirmAndSubmitForm" CssClass="e-outline e-custom">Confirm and Submit</SfButton>
     </div>
 </div>
 <div style="display:@(showComplete ? "block" : "none")">
-    <div class="mt-10">
+    <div class="my-10">
         <h3>Your form has been submitted!</h3>
         <p>Your form has been submitted. We will reach out if there is any information that we might need.</p>
     </div>
     
 </div>
 
-<hr class="mt-10"/>
+<hr class=""/>
 <p class="mt-8 text-center lg:mx-[5%]">This web page is secured using an SSL Extended Validation certificate. 
     All information submitted on this page is secured by the LSU Foundation and is only accessible via authorized personnel. 
     If you experience any problems with using this form please send an email to accountspayable@lsufoundation.org.</p>
@@ -415,6 +415,72 @@
     private bool showFileError;
     private TaskCompletionSource<bool>? uploadCompletion;
 
+    //Dropdown fields
+    string[] AccountTypes =
+    {
+        "Checking",
+        "Savings",
+        "Other"
+    };
+
+    string[] StateList =
+    {
+        "Alabama",
+        "Alaska",
+        "Arizona",
+        "Arkansas",
+        "California",
+        "Colorado",
+        "Connecticut",
+        "Delaware",
+        "District of Columbia",
+        "Florida",
+        "Georgia",
+        "Hawaii",
+        "Idaho",
+        "Illinois",
+        "Indiana",
+        "Iowa",
+        "Kansas",
+        "Kentucky",
+        "Louisiana",
+        "Maine",
+        "Maryland",
+        "Massachusetts",
+        "Michigan",
+        "Minnesota",
+        "Mississippi",
+        "Missouri",
+        "Montana",
+        "Nebraska",
+        "Nevada",
+        "New Hampshire",
+        "New Jersey",
+        "New Mexico",
+        "New York",
+        "North Carolina",
+        "North Dakota",
+        "Ohio",
+        "Oklahoma",
+        "Oregon",
+        "Pennsylvania",
+        "Rhode Island",
+        "South Carolina",
+        "South Dakota",
+        "Tennessee",
+        "Texas",
+        "Utah",
+        "Vermont",
+        "Virginia",
+        "Washington",
+        "West Virginia",
+        "Wisconsin",
+        "Wyoming"
+    };
+
+    /* * * * * * * * * *
+     *  INITIALIZING   *
+     * * * * * * * * * */
     //Handles initialization of objects when loading page
     protected override void OnInitialized()
     {
@@ -425,21 +491,9 @@
         editContext.OnFieldChanged += EditContext_OnFieldChange;
     }
 
-    //Validates form that is currently being used
-    private void ValidateForm()
-    {
-        messageStore.Clear();
-        showFileError = false;
-
-        ManualValidation();
-        RunCustomValidation();
-
-        if (!IsFileSelected)
-            showFileError = true;
-
-        editContext.NotifyValidationStateChanged();
-    }
-
+    /* * * * * * * * * *
+     * ROUTE HANDLING  *
+     * * * * * * * * * */
     //Handle moving from form to confirmaton page
     private void SubmissionToConfirmation()
     {
@@ -456,8 +510,11 @@
         showConfirmation = false;
     }
 
+    /* * * * * * * * * *
+     *   SUBMISSION    *
+     * * * * * * * * * */
     //Handle the actual submission of the form
-    private async Task ConfirmationSubmission()
+    private async Task ConfirmAndSubmitForm()
     {
         if(isSubmitting) return;
 
@@ -491,7 +548,8 @@
             {
                 await SubmissionService.RollbackSubmission(submissionId);
 
-                //File has failed to be submitted show something to the screen. Mayve Toast notification.
+                //File has failed to be submitted show something to the screen. Maybe Toast notification.
+
 
                 editContext.NotifyValidationStateChanged();
                 return;
@@ -504,6 +562,24 @@
         {
             uploadCompletion = null;
         }
+    }
+
+    /* * * * * * * * * *
+     * FORM VALIDATION *
+     * * * * * * * * * */
+    //Validates form that is currently being used
+    private void ValidateForm()
+    {
+        messageStore.Clear();
+        showFileError = false;
+
+        ManualValidation();
+        RunCustomValidation();
+
+        if (!IsFileSelected)
+            showFileError = true;
+
+        editContext.NotifyValidationStateChanged();
     }
 
     //Handle informaton before the file is uploaded
@@ -642,67 +718,4 @@
         messageStore.Clear(args.FieldIdentifier);
         editContext.NotifyValidationStateChanged();
     }
-
-    //Dropdown fields
-    string[] AccountTypes =
-    {
-        "Checking",
-        "Savings",
-        "Other"
-    };
-
-    string[] StateList =
-    {
-        "Alabama",
-        "Alaska",
-        "Arizona",
-        "Arkansas",
-        "California",
-        "Colorado",
-        "Connecticut",
-        "Delaware",
-        "District of Columbia",
-        "Florida",
-        "Georgia",
-        "Hawaii",
-        "Idaho",
-        "Illinois",
-        "Indiana",
-        "Iowa",
-        "Kansas",
-        "Kentucky",
-        "Louisiana",
-        "Maine",
-        "Maryland",
-        "Massachusetts",
-        "Michigan",
-        "Minnesota",
-        "Mississippi",
-        "Missouri",
-        "Montana",
-        "Nebraska",
-        "Nevada",
-        "New Hampshire",
-        "New Jersey",
-        "New Mexico",
-        "New York",
-        "North Carolina",
-        "North Dakota",
-        "Ohio",
-        "Oklahoma",
-        "Oregon",
-        "Pennsylvania",
-        "Rhode Island",
-        "South Carolina",
-        "South Dakota",
-        "Tennessee",
-        "Texas",
-        "Utah",
-        "Vermont",
-        "Virginia",
-        "Washington",
-        "West Virginia",
-        "Wisconsin",
-        "Wyoming"
-    };
 }
