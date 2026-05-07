@@ -10,7 +10,7 @@
 
 <h1 class="">Vendor Information Submission Form</h1>
 
-<h2 class="mb-1">Vendor Information</h2>
+<h2 class="mb-3">Vendor Information</h2>
 <hr />
 
 <div style="display:@(showConfirmation || showComplete ? "none" : "block")">
@@ -271,6 +271,10 @@
     All information submitted on this page is secured by the LSU Foundation and is only accessible via authorized personnel. 
     If you experience any problems with using this form please send an email to accountspayable@lsufoundation.org.</p>
 
+
+<SfToast @ref="ToastObj" ShowCloseButton="true" Title="There has been an error" Timeout="0" Content="There seems to have been an error while processing the information. None of your personal data has been stored. Please refresh the page and resubmit the form. If this issue persists please reach out to <strong>tteets@lsufoundation.org</strong>." Width="400">
+    <ToastPosition X="Left" Y="Bottom"></ToastPosition>
+</SfToast>
 <style>
     hr {
         border: 3px solid #fdd023;
@@ -393,6 +397,15 @@
         display: none !important;
     }
 
+    .e-toast-title {
+        color: #BA0000 !important;
+        font-weight: 800 !important;
+    }
+
+    .e-toast {
+        background-color: #eaeaea !important;
+    }
+
 </style>
 
 @code {
@@ -414,6 +427,8 @@
     private bool IsFileSelected;
     private bool showFileError;
     private TaskCompletionSource<bool>? uploadCompletion;
+
+    private SfToast ToastObj = new();
 
     //Dropdown fields
     string[] AccountTypes =
@@ -549,7 +564,8 @@
                 await SubmissionService.RollbackSubmission(submissionId);
 
                 //File has failed to be submitted show something to the screen. Maybe Toast notification.
-
+                await ToastObj.ShowAsync();
+                await Task.Yield();
 
                 editContext.NotifyValidationStateChanged();
                 return;
@@ -557,6 +573,10 @@
 
             showConfirmation = false;
             showComplete = true;
+        }catch(Exception e)
+        {
+            await ToastObj.ShowAsync();
+            await Task.Yield();
         }
         finally
         {

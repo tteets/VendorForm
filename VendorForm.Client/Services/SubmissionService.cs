@@ -21,8 +21,15 @@ public class SubmissionService
         var url = "/api/createpending";
 
         var response = await _http.PostAsJsonAsync(url, vendorInfo);
+        SubmissionResult? result;
 
-        var result = await response.Content.ReadFromJsonAsync<SubmissionResult>();
+        if (response.IsSuccessStatusCode)
+        {
+            result = await response.Content.ReadFromJsonAsync<SubmissionResult>();
+        }else
+        {
+            throw new Exception("There was an error getting information from the pending submission");
+        }
 
         return new SubmissionResult
         {
@@ -35,13 +42,6 @@ public class SubmissionService
     {
         //Remove the line in Azure Storage due to file upload error
         var url = "/api/rollback";
-        var response = await _http.PostAsJsonAsync(url, new SubmissionId(submissionId));
-    }
-
-    public async Task MarkCompleted(string submissionId)
-    {
-        //Mark the submission row complete. This means the file has been successfully uploaded to Blob Storage
-        var url = "/api/complete";
         var response = await _http.PostAsJsonAsync(url, new SubmissionId(submissionId));
     }
 }
