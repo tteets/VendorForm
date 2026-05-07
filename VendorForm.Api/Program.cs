@@ -2,7 +2,7 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using VendorForm.Api;
+using VendorForm.Api.Services;
 
 var builder = FunctionsApplication.CreateBuilder(args);
 

@@ -1,13 +1,7 @@
 ﻿using Azure.Data.Tables;
 using Azure.Storage.Blobs;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace VendorForm.Api;
+namespace VendorForm.Api.Services;
 
 
 public class StorageContext
@@ -19,7 +13,7 @@ public class StorageContext
     public StorageContext()
     {
         var connectionString =
-            Environment.GetEnvironmentVariable("AzureConnectionString") 
+            Environment.GetEnvironmentVariable("AzureWebJobsStorage") 
             ?? throw new InvalidOperationException("AzureConnectionString is missing");
             
 
