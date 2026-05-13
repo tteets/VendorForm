@@ -32,6 +32,8 @@ public class VendorSubmissionEntry : ITableEntity
     public string ContactName { get; set; } = default!;
     public string ContactPhone { get; set; } = default!;
     public string Ext { get; set; } = default!;
+    public string BlobName { get; set; } = default!;
+    public string BlobExtension { get; set; } = default!;
 
     //Encrypted
     public string FederalTaxId { get; set; } = default!;

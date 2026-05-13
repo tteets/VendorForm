@@ -127,14 +127,16 @@ public class SubmitForm
         await using var stream = file.OpenReadStream();
         await blob.UploadAsync(stream, overwrite: true);
 
+        //Update the entity
         entity.UploadToken = "";
         entity.Status = "UploadComplete";
+        entity.BlobName = blobName;
+        entity.BlobExtension = extension;
         entity.UploadedUtc = DateTimeOffset.Now;
         await _storage.VendorTable.UpdateEntityAsync(entity, entity.ETag, Azure.Data.Tables.TableUpdateMode.Merge);
 
         return new OkResult();
     }
-
 
     [Function("RollbackSubmission")]
     public async Task<HttpResponseData> RollbackSubmission([HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequestData req)
