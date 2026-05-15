@@ -18,11 +18,11 @@ public class VendorSubmissionEntry : ITableEntity
     public string Status { get; set; } = "PendingFile";
     public string UploadToken { get; set; } = default!;
     public DateTimeOffset CreatedUtc { get; set; }
-    public DateTimeOffset UploadedUtc { get; set; }
+    public DateTimeOffset UpdatedUtc { get; set; }
 
     public string VendorName { get; set; } = default!;
-    public string PayeeName { get; set; }  = default!;
-    public string Address { get; set; }  = default!;
+    public string PayeeName { get; set; } = default!;
+    public string Address { get; set; } = default!;
     public string Address2 { get; set; } = default!;
     public string City { get; set; } = default!;
     public string? State { get; set; } = default!;

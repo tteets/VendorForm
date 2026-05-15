@@ -53,6 +53,7 @@ public class SubmitForm
             UploadToken = uploadToken,
             Status = "PendingFile",
             CreatedUtc = DateTimeOffset.UtcNow,
+            UpdatedUtc = DateTimeOffset.UtcNow,
 
             VendorName = vendorInfo.VendorName,
             PayeeName = vendorInfo.PayeeName,
@@ -132,7 +133,7 @@ public class SubmitForm
         entity.Status = "UploadComplete";
         entity.BlobName = blobName;
         entity.BlobExtension = extension;
-        entity.UploadedUtc = DateTimeOffset.Now;
+        entity.UpdatedUtc = DateTimeOffset.UtcNow;
         await _storage.VendorTable.UpdateEntityAsync(entity, entity.ETag, Azure.Data.Tables.TableUpdateMode.Merge);
 
         return new OkResult();
